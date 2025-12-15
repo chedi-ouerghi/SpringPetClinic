@@ -1,0 +1,61 @@
+pipeline {
+    agent any  
+    
+    tools {
+        maven 'M3'  
+        }
+
+    
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/chedi-ouerghi/SpringPetClinic.git'
+            }
+        }
+
+        stage('Compile') {
+            steps {
+                script {
+
+                    sh 'mvn  compile'
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                script {
+                    // Exécute les tests unitaires avec Maven
+                    sh 'mvn test'
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                script {
+                    sh 'mvn clean install'
+                }
+            }
+        }
+
+        stage('Package') {
+            steps {
+                script {
+                    sh 'mvn package'
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                
+                    sh  'java -jar /home/coder/.jenkins/workspace/petclincDeclarativePipline/target/*.jar '
+                
+            }
+        }
+    }
+
+   
+}
